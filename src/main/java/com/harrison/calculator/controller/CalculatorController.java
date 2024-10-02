@@ -7,6 +7,7 @@ import com.harrison.calculator.model.Operation;
 import com.harrison.calculator.service.CalculatorService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,38 +35,47 @@ public class CalculatorController {
     }
 
     @PostMapping("/v1/calculate")
-    public Number calculate1(@RequestBody OperationRequest request) {
-        List<Pair<Operation, Number>> operations = request.getOperations()
-                .stream()
-                .map(op -> {
-                    Operation operation = Operation.valueOf(op.getOperation());
+    public String calculate1(@RequestBody OperationRequest request) {
+        try {
+            List<Pair<Operation, Number>> operations = request.getOperations()
+                    .stream()
+                    .map(op -> {
+                        Operation operation = Operation.valueOf(op.getOperation());
 //                    System.out.println("Operation: " + operation + ", Value: " + op.getValue());
-                    return Pair.of(operation, op.getValue());
-                })
-                .toList();
+                        return Pair.of(operation, op.getValue());
+                    })
+                    .toList();
 //        System.out.println(request.getInitialValue());
-
-        return calculatorService.chainCalculate(request.getInitialValue(), operations);
+        Number res = calculatorService.chainCalculate(request.getInitialValue(), operations);
+        return res.toString();
+        }
+        catch (Exception e){
+            return "bad input format or value";
+        }
     }
 
 
     @PostMapping("/v1/evaluate")
-    public Number evaluateExpression(@RequestBody ExpressionInput input) {
-        String[] parts = input.getExpression().split("\\s+");
-        Number initialResult = parseNumber(parts[0]); // Assume the first part is the initial number.
-        List<Pair<Operation, Number>> operations = new ArrayList<>();
+    public String evaluateExpression(@RequestBody ExpressionInput input) {
+        try {
+            String[] parts = input.getExpression().split("\\s+");
+            Number initialResult = parseNumber(parts[0]); // Assume the first part is the initial number.
+            List<Pair<Operation, Number>> operations = new ArrayList<>();
 
-        // Process remaining parts, which should be in pairs (operation, number)
-        for (int i = 1; i < parts.length; i += 2) {
-            if (i + 1 < parts.length) {  // Make sure there's a pair
-                Operation operation = Operation.getBySymbol(parts[i]);
-                Number value = parseNumber(parts[i + 1]);
-                operations.add(Pair.of(operation, value));
+            // Process remaining parts, which should be in pairs (operation, number)
+            for (int i = 1; i < parts.length; i += 2) {
+                if (i + 1 < parts.length) {  // Make sure there's a pair
+                    Operation operation = Operation.getBySymbol(parts[i]);
+                    Number value = parseNumber(parts[i + 1]);
+                    operations.add(Pair.of(operation, value));
+                }
             }
+
+            Number res = calculatorService.chainCalculate(initialResult, operations);
+            return res.toString();
+        }catch (Exception e){
+            return "bad input format or value";
         }
-
-        return calculatorService.chainCalculate(initialResult, operations);
-
     }
 
     private Number parseNumber(String numberStr) {

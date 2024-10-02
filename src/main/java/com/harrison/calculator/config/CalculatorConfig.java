@@ -12,12 +12,13 @@ import java.util.Map;
 public class CalculatorConfig {
 
     @Bean
-    public Map<Operation, OperationStrategy> operationStrategies(AddOperation add, SubtractOperation subtract, MultiplyOperation multiply, DivideOperation divide) {
+    public Map<Operation, OperationStrategy> operationStrategies(AddOperation add, SubtractOperation subtract, MultiplyOperation multiply, DivideOperation divide, PowerOperation power) {
         Map<Operation, OperationStrategy> strategies = new HashMap<>();
         strategies.put(Operation.ADD, add);
         strategies.put(Operation.SUBTRACT, subtract);
         strategies.put(Operation.MULTIPLY, multiply);
         strategies.put(Operation.DIVIDE, divide);
+        strategies.put(Operation.POWER, power);
         return strategies;
     }
 

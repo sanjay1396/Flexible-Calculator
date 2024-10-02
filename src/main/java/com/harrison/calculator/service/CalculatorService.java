@@ -32,46 +32,38 @@ public class CalculatorService {
         Stack<Number> numbers = new Stack<>();
         Stack<Operation> operators = new Stack<>();
 
-        // Start with the initial value
         numbers.push(initialValue);
 
         for (Pair<Operation, Number> op : operations) {
             Operation currentOperation = op.getLeft();
             Number currentValue = op.getRight();
 
-            if (currentOperation == Operation.MULTIPLY || currentOperation == Operation.DIVIDE) {
-                // If the operator is * or /, pop the last number and apply the operation
+            while (!operators.isEmpty() && currentOperation.getPriority() <= operators.peek().getPriority()) {
+                // Process the stack if the current operation has a lower or equal priority
                 Number lastNumber = numbers.pop();
-                Number result = calculate(currentOperation, lastNumber, currentValue);
+                Number secondLastNumber = numbers.pop();
+                Operation lastOperator = operators.pop();
+
+                Number result = calculate(lastOperator, secondLastNumber, lastNumber);
                 numbers.push(result);
-            } else {
-                // If the operator is + or -, just push the operator
-                operators.push(currentOperation);
-                numbers.push(currentValue);
             }
+
+            // Push the current operation and value onto their respective stacks
+            operators.push(currentOperation);
+            numbers.push(currentValue);
         }
 
-        // Now process the remaining numbers with + and - operators
-        Number result = numbers.pop();  // Start with the last number
-
+        // Now process the remaining operations in the stack
         while (!operators.isEmpty()) {
             Operation operator = operators.pop();
-            Number nextValue = numbers.pop();
+            Number lastNumber = numbers.pop();
+            Number secondLastNumber = numbers.pop();
 
-            result = calculate(operator, result, nextValue);
+            Number result = calculate(operator, secondLastNumber, lastNumber);
+            numbers.push(result);
         }
 
-        return result;
-//        List<Pair<Operation, Number>> sortedOperations = new ArrayList<>(operations);
-//        sortedOperations.sort(Comparator.comparingInt(pair -> pair.getLeft().getPriority()));
-//
-//        // Step 2: Calculate based on sorted operations
-//        Number result = initialValue;
-//
-//        for (Pair<Operation, Number> op : sortedOperations) {
-//            result = calculate(op.getLeft(), result, op.getRight());
-//        }
-//
-//        return result;
+        return numbers.pop(); // The final result
     }
+
 }
