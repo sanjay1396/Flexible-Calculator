@@ -12,11 +12,11 @@ import java.util.*;
 @Service
 public class CalculatorService {
 
-    private final Map<Operation, OperationStrategy> operationMap = new HashMap<>();
+    private final Map<Operation, OperationStrategy> operationMap;
 
     @Autowired
-    public CalculatorService(Map<Operation, OperationStrategy> strategies) {
-        this.operationMap.putAll(strategies);
+    public CalculatorService(Map<Operation, OperationStrategy> operationMap) {
+        this.operationMap = operationMap;
     }
 
     public Number calculate(Operation op, Number num1, Number num2) {
