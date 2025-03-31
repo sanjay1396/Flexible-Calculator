@@ -30,7 +30,7 @@ This project implements a flexible, extensible calculator in Java that adheres t
 
 ### Class Diagram
 
-![Class Diagram]()
+![Class Diagram](https://github.com/sanjay1396/Calculator/blob/main/docs/class-diagram.png)
 
 ### Design Patterns Used
 
