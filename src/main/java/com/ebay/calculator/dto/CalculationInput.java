@@ -1,15 +1,14 @@
-package com.harrison.calculator.dto;
+package com.ebay.calculator.dto;
 
-
-public class ExpressionInput {
+public class CalculationInput {
     private String expression;  // This field holds the string expression.
 
     // Default constructor necessary for frameworks like Spring to easily instantiate and populate the object.
-    public ExpressionInput() {
+    public CalculationInput() {
     }
 
     // Constructor with parameter to facilitate easy creation of the object with an expression.
-    public ExpressionInput(String expression) {
+    public CalculationInput(String expression) {
         this.expression = expression;
     }
 
@@ -22,4 +21,3 @@ public class ExpressionInput {
         this.expression = expression;
     }
 }
-

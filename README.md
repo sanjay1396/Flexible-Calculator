@@ -1,12 +1,14 @@
 # Flexible Calculator
 
-This project implements a flexible and extensible calculator in Java, designed to perform various arithmetic operations while adhering to object-oriented principles. The calculator supports chaining operations and can easily be extended to include new operations.
+This project implements a flexible, extensible calculator in Java that adheres to the Open-Closed Principle, ensuring that new operations can be added without modifying the core `Calculator` class. The design follows Object-Oriented Programming (OOP) principles and is compatible with an Inversion of Control (IoC) environment.
 
 ## Table of Contents
 
 - [Features](#features)
 - [Technologies](#technologies)
-- [Installation](#installation)
+- [Architecture & Design](#architecture--design)
+- [Usage](#usage)
+- [Assumptions & Considerations](#assumptions--considerations)
 - [Testing](#testing)
 
 ## Features
@@ -22,46 +24,88 @@ This project implements a flexible and extensible calculator in Java, designed t
 - Java 17
 - Spring Boot
 - Maven
-- Apache Commons Lang
 - JUnit and Mockito for testing
 
-## Arch of Project
-![image](https://github.com/user-attachments/assets/973d7ac9-33c2-413c-ba52-015d9fdba828)
+## Architecture & Design
 
+### Class Diagram
 
-## Finished Results
- 1. Calculate by String
+![Class Diagram]()
 
-![image](https://github.com/user-attachments/assets/edb57c73-4951-49bb-80e2-1d29c0ba3c18)
+### Design Patterns Used
 
- 2. Calculate by param
- 
- ![image](https://github.com/user-attachments/assets/a6721f05-51b5-4cc0-af76-2fe03d34536e)
+- **Strategy Pattern**: Allows dynamic selection of operations without modifying the core calculator.
+- **Factory Pattern**: Used to register and retrieve different operations.
+- **Fluent Interface**: Enables chaining operations for enhanced readability.
+- **Dependency Injection**: Ensures testability and modular design.
 
+### Component Breakdown
 
-## Extra Implementation
+- **Calculator Class**: Core calculator logic performing operations.
+- **Operation Enum**: Defines available operations.
+- **OperationStrategy Interface**: Encapsulates operation logic, making it extendable.
+- **OperationRegistry**: Centralized management of operations.
+- **ChainedCalculator**: Implements chaining for sequential calculations.
 
-1. Calculate by String, basically input a string and my programming will scan and anaylsis.
+## Usage
 
-2. Open-Closed Principle
-   In this project, once user wants to add new operation, it only need to add in Operation.class and set the priority and character like follows. And then register under the config.class.
-   
-![image](https://github.com/user-attachments/assets/e104fd73-6c26-4edd-acee-98ac19385a30)
-   
-![image](https://github.com/user-attachments/assets/e1a95f10-71a4-4bcb-8368-dc39487304b8)
+### 1. Basic Calculation
 
-![image](https://github.com/user-attachments/assets/e72f3a35-5264-4c9f-82ca-dd49154f99e9)
+The `calculate` method performs a basic operation between two numbers:
 
+```java
+Calculator calculator = new Calculator();
+Number result = calculator.calculate(Operation.ADD, 5, 3);
+System.out.println(result); // Output: 8
+```
+
+### 2. Chaining Operations
+
+The calculator supports operation chaining:
+
+```java
+ChainedCalculator calc = new ChainedCalculator(5);
+Number result = calc.add(3).multiply(2).getResult();
+System.out.println(result); // Output: 16
+```
+
+### 3. Adding New Operations
+
+New operations can be added without modifying the `Calculator` class:
+
+```java
+public class ModulusOperation implements OperationStrategy {
+    @Override
+    public Number apply(Number num1, Number num2) {
+        return num1.intValue() % num2.intValue();
+    }
+}
+```
+
+Register the new operation:
+
+```java
+OperationRegistry.register(Operation.MODULUS, new ModulusOperation());
+```
+
+## Assumptions & Considerations
+
+- Operations apply to numeric types only (`Integer`, `Double`, etc.).
+- Floating-point precision is handled internally to minimize rounding errors.
+- Division by zero is gracefully managed by throwing an exception.
+- Operations are registered dynamically, making it easy to expand functionality.
+- Thread safety is ensured for concurrent operations.
 
 ## Testing
-- controller test
 
-![image](https://github.com/user-attachments/assets/15839e0b-6c92-476e-ae9f-f41e1a9799d6)
+Unit tests are included to validate:
 
-![image](https://github.com/user-attachments/assets/60954b89-193b-43bb-92bd-4669506ed856)
+- Basic operations
+- Chaining functionality
+- Error handling for invalid operations
 
-- service test
+Run tests using:
 
-![image](https://github.com/user-attachments/assets/6316408d-2b4f-4754-acb5-c12716e2d29a)
+```sh
+mvn
 
-![image](https://github.com/user-attachments/assets/996f22f8-828f-4727-be58-5b61615a5a12)

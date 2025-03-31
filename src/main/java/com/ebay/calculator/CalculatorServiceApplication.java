@@ -1,13 +1,14 @@
-package com.harrison.calculator;
+package com.ebay.calculator;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Test1Application {
+public class CalculatorServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Test1Application.class, args);
+        SpringApplication.run(CalculatorServiceApplication.class, args);
     }
 
 }
+
