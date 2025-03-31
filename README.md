@@ -107,5 +107,5 @@ Unit tests are included to validate:
 Run tests using:
 
 ```sh
-mvn
+mvn test
 
